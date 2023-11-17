@@ -1,15 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "splk/cmRC4gbfTHFl9bzlJW25Vd3jLe4d35d/uSRJNIh0i0FlWe424KTJXe0GOK5FLkaKWZqeDEV++EnbMOoDg==",
+  "dgSpecHash": "eZLeVUKu/IK0eTtMYzoFgearRefRB+/Go+uRGQ3asWVmB6yvp3Xgkgn28cx/24c6UqybqloqzSEPkd2k5/fssw==",
   "success": true,
   "projectFilePath": "/Users/juanmange/Documents/csharp/ApiPeliculas/ApiPeliculas/ApiPeliculas.csproj",
   "expectedPackageFiles": [
+    "/Users/juanmange/.nuget/packages/automapper/12.0.1/automapper.12.0.1.nupkg.sha512",
     "/Users/juanmange/.nuget/packages/azure.core/1.25.0/azure.core.1.25.0.nupkg.sha512",
     "/Users/juanmange/.nuget/packages/azure.identity/1.7.0/azure.identity.1.7.0.nupkg.sha512",
     "/Users/juanmange/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/Users/juanmange/.nuget/packages/microsoft.aspnetcore.openapi/7.0.11/microsoft.aspnetcore.openapi.7.0.11.nupkg.sha512",
     "/Users/juanmange/.nuget/packages/microsoft.bcl.asyncinterfaces/1.1.1/microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
-    "/Users/juanmange/.nuget/packages/microsoft.csharp/4.5.0/microsoft.csharp.4.5.0.nupkg.sha512",
+    "/Users/juanmange/.nuget/packages/microsoft.csharp/4.7.0/microsoft.csharp.4.7.0.nupkg.sha512",
     "/Users/juanmange/.nuget/packages/microsoft.data.sqlclient/5.1.1/microsoft.data.sqlclient.5.1.1.nupkg.sha512",
     "/Users/juanmange/.nuget/packages/microsoft.data.sqlclient.sni.runtime/5.1.0/microsoft.data.sqlclient.sni.runtime.5.1.0.nupkg.sha512",
     "/Users/juanmange/.nuget/packages/microsoft.entityframeworkcore/7.0.13/microsoft.entityframeworkcore.7.0.13.nupkg.sha512",
