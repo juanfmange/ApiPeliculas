@@ -90,5 +90,62 @@ public class CategoriasController : ControllerBase
                 return CreatedAtRoute("GetCategoria", new {categoriaId = categoria.Id}, categoria);
         }
         
+        //Actualizar patch categoria
+        [HttpPatch("{categoriaId:int}", Name = "ActualizarCategoria")]
+        [ProducesResponseType(201,Type = typeof(CategoriaDTO))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        
+        public IActionResult ActualizarCategoria(int categoriaId, [FromBody] CategoriaDTO categoriaDto)
+        {
+
+                if (!ModelState.IsValid)
+                {
+                        return BadRequest();
+                }
+
+                if (categoriaDto == null || categoriaId != categoriaDto.Id)
+                {
+                        return BadRequest(ModelState);
+                }
+                
+                
+                
+                
+                var categoria = _mapper.Map<Categoria>(categoriaDto);
+                if(!_ctRepo.ActualizarCategoria(categoria))
+                {
+                        ModelState.AddModelError("", $"Algo salio mal actualizando el registro {categoria.Nombre}");
+                        return StatusCode(500, ModelState);
+                }
+
+                return NoContent();
+        }
+        
+        //Borrar categoria
+        [HttpDelete("{categoriaId:int}", Name = "BorrarCategoria")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        
+        
+        public IActionResult ActualizarCategoria(int categoriaId, [FromBody] CrearCategoriaDTO categoriaDto)
+        {
+                if (!_ctRepo.ExisteCategoria(categoriaId))
+                {
+                        return NotFound();
+                }
+
+                var categoria = _ctRepo.GetCategoria(categoriaId);
+                if(!_ctRepo.BorrarCategoria(categoria))
+                {
+                        ModelState.AddModelError("", $"Algo salio mal borrando el registro {categoria.Nombre}");
+                        return StatusCode(500, ModelState);
+                }
+
+                return NoContent();
+        }
+        
         
 }
