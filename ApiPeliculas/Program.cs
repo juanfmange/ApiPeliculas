@@ -1,6 +1,7 @@
 using ApiPeliculas.Data;
 using ApiPeliculas.PeliculasMapper;
 using ApiPeliculas.Repositorio;
+using ApiPeliculas.Repositorio.Interfaces;
 using ApiPeliculas.Repositorio.IRepositorio;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
@@ -17,6 +18,7 @@ builder.Services.AddAutoMapper(typeof(PeliculasMapper));
 
 //Agregamos los repositorios
 builder.Services.AddScoped<ICategoriaRepositorio, CategoriaRepositorio>();
+builder.Services.AddScoped<IPeliculaRepository, PeliculaRepository>();
 
 // Add services to the container.
 

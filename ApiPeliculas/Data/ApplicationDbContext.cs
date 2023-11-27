@@ -1,4 +1,5 @@
 using ApiPeliculas.Models;
+using ApiPeliculas.Models.Pelicula;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiPeliculas.Data;
@@ -13,4 +14,6 @@ public class ApplicationDbContext : DbContext
     
     //Agrega los modelos
     public DbSet<Categoria> Categoria { get; set; }
+    public DbSet<Pelicula> Pelicula { get; set; }
+    
 }

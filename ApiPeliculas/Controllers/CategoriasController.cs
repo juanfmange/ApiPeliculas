@@ -28,7 +28,7 @@ public class CategoriasController : ControllerBase
                 
                 var listaCategoriasDTO = new List<CategoriaDTO>();
 
-                foreach (var lista in listaCategoriasDTO)
+                foreach (var lista in listaCategorias)
                 {
                         listaCategoriasDTO.Add(_mapper.Map<CategoriaDTO>(lista));
                 }

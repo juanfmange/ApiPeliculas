@@ -41,6 +41,56 @@ namespace ApiPeliculas.Migrations
 
                     b.ToTable("Categoria");
                 });
+
+            modelBuilder.Entity("ApiPeliculas.Models.Pelicula.Pelicula", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Clasificacion")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Duracion")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RutaImagen")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("categoriaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("categoriaId");
+
+                    b.ToTable("Pelicula");
+                });
+
+            modelBuilder.Entity("ApiPeliculas.Models.Pelicula.Pelicula", b =>
+                {
+                    b.HasOne("ApiPeliculas.Models.Categoria", "Categoria")
+                        .WithMany()
+                        .HasForeignKey("categoriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Categoria");
+                });
 #pragma warning restore 612, 618
         }
     }
