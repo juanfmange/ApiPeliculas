@@ -1,19 +1,26 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 using ApiPeliculas.Data;
 using ApiPeliculas.Models.DTO.Users;
 using ApiPeliculas.Models.Users;
 using ApiPeliculas.Repositorio.IRepositorio.Users;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ApiPeliculas.Repositorio;
 
 public class UserRepository : IUserRepository
 {
     private readonly ApplicationDbContext _bd;
-    private IUserRepository _userRepositoryImplementation;
+    private string secretKey;
+    
+    //private IUserRepository _userRepositoryImplementation;
 
-    public UserRepository(ApplicationDbContext bd)
+    public UserRepository(ApplicationDbContext bd, IConfiguration config)
     {
         _bd = bd;
+        secretKey = config.GetValue<string>("ApiSettings:SecretKey");
     }
 
 
@@ -37,9 +44,48 @@ public class UserRepository : IUserRepository
         return false;
     }
 
-    public Task<UserLoginResponseDto> Login(UserLoginDto userLoginDto)
+    public async Task<UserLoginResponseDto> Login(UserLoginDto userLoginDto)
     {
-        return _userRepositoryImplementation.Login(userLoginDto);
+        var passwordEncrypted = encrypted(userLoginDto.Password);
+
+        var user = _bd.User.FirstOrDefault(
+            u => u.NombreUsuario.ToLower() == userLoginDto.NombreUsuario.ToLower()
+                 && u.Password == passwordEncrypted
+        );
+        //Validamos si el usuario no existe con la combinacion de usuario y password correcto
+        if(user == null)
+        {
+            return new UserLoginResponseDto()
+            {
+                User = null,
+                Token = ""
+            };
+        }
+        
+        //Si el usuario existe, generamos el token
+        var tokenManager = new JwtSecurityTokenHandler();
+        var key = Encoding.ASCII.GetBytes(secretKey);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        { 
+            Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.NombreUsuario.ToString()),
+                    new Claim(ClaimTypes.Role, user.Rol)
+                }),
+            Expires = DateTime.UtcNow.AddDays(7),
+            SigningCredentials = new(new SymmetricSecurityKey(key),SecurityAlgorithms.HmacSha256Signature)
+        };
+        
+        var token = tokenManager.CreateToken(tokenDescriptor);
+
+        UserLoginResponseDto userLoginResponseDto = new UserLoginResponseDto()
+        {
+            Token = tokenManager.WriteToken(token),
+            User = user
+        };
+
+        return userLoginResponseDto;
     }
 
     public async Task<User> CreateAccount(CreateUserDto createUserDto)
