@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using ApiPeliculas.Data;
 using ApiPeliculas.Models.DTO.Users;
 using ApiPeliculas.Models.Users;
@@ -41,8 +42,35 @@ public class UserRepository : IUserRepository
         return _userRepositoryImplementation.Login(userLoginDto);
     }
 
-    public Task<User> CreateAccouny(CreateUserDto createUserDto)
+    public async Task<User> CreateAccount(CreateUserDto createUserDto)
     {
-        return _userRepositoryImplementation.CreateAccouny(createUserDto);
+        var passwordEncrypted = encrypted(createUserDto.Password);
+        User user = new User()
+        {
+            NombreUsuario = createUserDto.NombreUsuario,
+            Password = passwordEncrypted,
+            Nombre = createUserDto.Nombre,
+            Rol = createUserDto.Rol
+        };
+        
+        _bd.User.Add(user);
+        
+        await _bd.SaveChangesAsync();
+
+        user.Password = passwordEncrypted;
+
+        return user;
+    }
+    
+    //Metodo para encryptar el password
+    public static string encrypted(string valor)
+    {
+        MD5CryptoServiceProvider x = new MD5CryptoServiceProvider();
+        byte[] data = System.Text.Encoding.UTF8.GetBytes(valor);
+        data = x.ComputeHash(data);
+        string resp = "";
+        for (int i = 0; i < data.Length; i++)
+            resp += data[i].ToString("x2").ToLower();
+        return resp;
     }
 }

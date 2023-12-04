@@ -12,5 +12,5 @@ public interface IUserRepository
     bool IsUniqueUser(string userName);
     
     Task<UserLoginResponseDto> Login(UserLoginDto userLoginDto);
-    Task<User> CreateAccouny (CreateUserDto createUserDto);
+    Task<User> CreateAccount (CreateUserDto createUserDto);
 }
