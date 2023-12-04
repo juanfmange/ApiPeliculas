@@ -1,5 +1,6 @@
 using ApiPeliculas.Models;
 using ApiPeliculas.Models.Pelicula;
+using ApiPeliculas.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiPeliculas.Data;
@@ -16,4 +17,5 @@ public class ApplicationDbContext : DbContext
     public DbSet<Categoria> Categoria { get; set; }
     public DbSet<Pelicula> Pelicula { get; set; }
     
+    public DbSet<User> User { get; set; }
 }
