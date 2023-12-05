@@ -22,6 +22,8 @@ public class CategoriasController : ControllerBase
         
         [AllowAnonymous]
         [HttpGet]
+        //[ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any)]
+        [ResponseCache(CacheProfileName = "Default20")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetCategorias()
