@@ -1,3 +1,5 @@
+using System.Net;
+using ApiPeliculas.Models;
 using ApiPeliculas.Models.DTO.Users;
 using ApiPeliculas.Repositorio.IRepositorio.Users;
 using AutoMapper;
@@ -9,12 +11,14 @@ namespace ApiPeliculas.Controllers;
 [ApiController]
 public class UsersController : ControllerBase
 {
+    protected ResponseApi _responseApi;
     private readonly IUserRepository _usRepo;
     private readonly IMapper _mapper;
 
     public UsersController(IUserRepository usRepo, IMapper mapper)
     {
         _usRepo = usRepo;
+        this._responseApi = new ResponseApi();
         _mapper = mapper;
     }    
     
@@ -53,4 +57,60 @@ public class UsersController : ControllerBase
 
         return Ok(itemUserDto);
     }
+    
+    [HttpPost("registro")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        
+    public async Task<IActionResult> CreateAccount([FromBody] CreateUserDto createUserDto)
+    {
+        bool validateUniqueUser = _usRepo.IsUniqueUser(createUserDto.NombreUsuario);
+        
+        if (!validateUniqueUser)
+        {
+            _responseApi.StatusCode = HttpStatusCode.BadRequest; 
+            _responseApi.IsSuccess = false;
+            _responseApi.ErrorMessages.Add("El usuario ya existe");
+            return BadRequest(_responseApi);
+        }
+
+        var user = await _usRepo.CreateAccount(createUserDto);
+        if (user == null)
+        {
+            _responseApi.StatusCode = HttpStatusCode.BadRequest;
+            _responseApi.IsSuccess = false;
+            _responseApi.ErrorMessages.Add("Error al crear el usuario");
+            return BadRequest(_responseApi);
+        }
+        
+        _responseApi.StatusCode = HttpStatusCode.OK;
+        _responseApi.IsSuccess = true;
+        return Ok(_responseApi);
+
+    }
+    
+    [HttpPost("login")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        
+    public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
+    {
+        var responseLogin = await _usRepo.Login(userLoginDto);
+        
+        if (responseLogin.User == null || string.IsNullOrEmpty(responseLogin.Token))
+        {
+            _responseApi.StatusCode = HttpStatusCode.BadRequest; 
+            _responseApi.IsSuccess = false;
+            _responseApi.ErrorMessages.Add("El usuario no existe o credenciales incorrectas");
+            return BadRequest(_responseApi);
+        }
+
+        _responseApi.StatusCode = HttpStatusCode.OK;
+        _responseApi.IsSuccess = true;
+        _responseApi.Result = responseLogin;
+        return Ok(_responseApi);
+    }
+    
 }

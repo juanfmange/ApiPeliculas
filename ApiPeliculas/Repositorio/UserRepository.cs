@@ -20,7 +20,7 @@ public class UserRepository : IUserRepository
     public UserRepository(ApplicationDbContext bd, IConfiguration config)
     {
         _bd = bd;
-        secretKey = config.GetValue<string>("ApiSettings:SecretKey");
+        secretKey = config.GetValue<string>("ApiSettings:Secret");
     }
 
 
@@ -52,13 +52,15 @@ public class UserRepository : IUserRepository
             u => u.NombreUsuario.ToLower() == userLoginDto.NombreUsuario.ToLower()
                  && u.Password == passwordEncrypted
         );
+        
+        
         //Validamos si el usuario no existe con la combinacion de usuario y password correcto
         if(user == null)
         {
             return new UserLoginResponseDto()
             {
-                User = null,
-                Token = ""
+                Token = "",
+                User = null
             };
         }
         
