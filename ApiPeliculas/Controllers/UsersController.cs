@@ -3,6 +3,7 @@ using ApiPeliculas.Models;
 using ApiPeliculas.Models.DTO.Users;
 using ApiPeliculas.Repositorio.IRepositorio.Users;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 
@@ -23,7 +24,9 @@ public class UsersController : ControllerBase
     }    
     
     [HttpGet]
+    [Authorize(Roles = "admin")]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult GetUsers()
     {
@@ -40,9 +43,11 @@ public class UsersController : ControllerBase
     
     
     [HttpGet("{userId:int}", Name = "GetUser")]
+    [Authorize(Roles = "admin")]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult GetUser(int userId)
     {
@@ -58,6 +63,7 @@ public class UsersController : ControllerBase
         return Ok(itemUserDto);
     }
     
+    [AllowAnonymous]
     [HttpPost("registro")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -90,6 +96,7 @@ public class UsersController : ControllerBase
 
     }
     
+    [AllowAnonymous]
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

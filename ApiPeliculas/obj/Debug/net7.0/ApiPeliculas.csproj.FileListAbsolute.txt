@@ -77,3 +77,4 @@
 /Users/juanmange/Documents/csharp/ApiPeliculas/ApiPeliculas/bin/Debug/net7.0/AutoMapper.dll
 /Users/juanmange/Documents/csharp/ApiPeliculas/ApiPeliculas/obj/Debug/net7.0/ApiPeliculas.sourcelink.json
 /Users/juanmange/Documents/csharp/ApiPeliculas/ApiPeliculas/bin/Debug/net7.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+/Users/juanmange/Documents/csharp/ApiPeliculas/ApiPeliculas/bin/Debug/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll

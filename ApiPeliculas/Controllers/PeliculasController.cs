@@ -4,6 +4,7 @@ using ApiPeliculas.Repositorio.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace ApiPeliculas.Controllers;
@@ -22,6 +23,7 @@ public class PeliculasController : ControllerBase
         _mapper = mapper;
     }
     
+    [AllowAnonymous]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -38,6 +40,7 @@ public class PeliculasController : ControllerBase
         return Ok(listaPeliculasDTO);
     }
     
+    [AllowAnonymous]
     [HttpGet("{peliculaId:int}", Name = "GetPelicula")]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -59,8 +62,10 @@ public class PeliculasController : ControllerBase
     
     
     [HttpPost]
+    [Authorize(Roles = "admin")]
     [ProducesResponseType(201,Type = typeof(PeliculaDTO))]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         
@@ -96,7 +101,9 @@ public class PeliculasController : ControllerBase
     
     
     [HttpPatch("{peliculaId:int}", Name = "ActualizarPelicula")]
+    [Authorize(Roles = "admin")]
     [ProducesResponseType(201,Type = typeof(PeliculaDTO))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
         
@@ -132,8 +139,9 @@ public class PeliculasController : ControllerBase
     //Borrar pelicula
     //Borrar categoria
     [HttpDelete("{peliculaId:int}", Name = "BorrarPelicula")]
+    [Authorize(Roles = "admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
         

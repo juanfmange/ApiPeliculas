@@ -1,3 +1,4 @@
+using System.Text;
 using ApiPeliculas.Data;
 using ApiPeliculas.PeliculasMapper;
 using ApiPeliculas.Repositorio;
@@ -6,8 +7,11 @@ using ApiPeliculas.Repositorio.IRepositorio;
 using ApiPeliculas.Repositorio.IRepositorio.Users;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.IdentityModel.Tokens;
 
+var builder = WebApplication.CreateBuilder(args);
 //Configurar la conexion a sql server (la base de datos)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -16,6 +20,25 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 //Agregar el automapper
 builder.Services.AddAutoMapper(typeof(PeliculasMapper));
+
+//Configuracion de autenticacion
+var key = builder.Configuration.GetValue<string>("ApiSettings:Secret");
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
 
 //Agregamos los repositorios
 builder.Services.AddScoped<ICategoriaRepositorio, CategoriaRepositorio>();
@@ -49,6 +72,7 @@ app.UseHttpsRedirection();
 //Soporte para CORS
 app.UseCors("PolicyCors");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
